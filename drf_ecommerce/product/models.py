@@ -30,5 +30,7 @@ class Product(models.Model):
     brand = models.ForeignKey(
         Brand, on_delete=models.SET_NULL, null=True, blank=True)
 
+    is_active = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
