@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from .models import Category, Brand, Product
 from drf_spectacular.utils import extend_schema
 
@@ -9,7 +10,6 @@ from .serializers import (
     BrandSerializer,
     ProductSerializer,
 )
-# Create your views here.
 
 
 class CategoryViewSet(viewsets.ViewSet):
@@ -36,9 +36,23 @@ class ProductViewSet(viewsets.ViewSet):
 
     category = CategorySerializer()
     brand = BrandSerializer()
-
     queryset = Product.objects.all()
 
+    @extend_schema(responses=ProductSerializer)
     def list(self, request):
         serializer = ProductSerializer(self.queryset, many=True)
+        return Response(serializer.data)
+
+    @action(
+        methods=["get"],
+        detail=False,
+        url_path=r"category/(?P<category>/w+)/all",
+        url_name="all",
+    )
+    def list_product_by_category(self, request, category=None):
+        """
+        List all products by category
+        """
+        serializer = ProductSerializer(
+            self.queryset.filter(category__name=category), many=True)
         return Response(serializer.data)
