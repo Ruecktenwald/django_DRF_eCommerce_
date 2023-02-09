@@ -38,6 +38,13 @@ class ProductViewSet(viewsets.ViewSet):
     brand = BrandSerializer()
     queryset = Product.objects.all()
 
+    def retrieve(self, request, pk=None):
+        """
+        Retrieve a product instance.
+        """
+        serializer = ProductSerializer(self.queryset.filter(pk=pk), many=True)
+        return Response(serializer.data)
+
     @extend_schema(responses=ProductSerializer)
     def list(self, request):
         serializer = ProductSerializer(self.queryset, many=True)
