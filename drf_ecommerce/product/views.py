@@ -46,8 +46,7 @@ class ProductViewSet(viewsets.ViewSet):
     @action(
         methods=["get"],
         detail=False,
-        url_path=r"category/(?P<category>/w+)/all",
-        url_name="all",
+        url_path=r"category/(?P<category>\w+)/all",
     )
     def list_product_by_category(self, request, category=None):
         """
