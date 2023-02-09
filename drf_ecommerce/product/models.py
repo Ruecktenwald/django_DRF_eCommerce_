@@ -23,6 +23,7 @@ class Brand(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=255)
     description = models.TextField(blank=True)
     is_digital = models.BooleanField(default=False)
     category = TreeForeignKey(
