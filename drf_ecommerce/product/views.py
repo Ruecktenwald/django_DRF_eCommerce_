@@ -41,7 +41,7 @@ class ProductViewSet(viewsets.ViewSet):
 
     category = CategorySerializer()
     brand = BrandSerializer()
-    queryset = Product.objects.all()
+    queryset = Product.objects.isactive()
     lookup_field = 'slug'
 
     def retrieve(self, request, slug=None,):
