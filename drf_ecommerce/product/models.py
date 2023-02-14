@@ -69,6 +69,29 @@ class ProductLine(models.Model):
             if obj.id != self.id and obj.order == self.order:
                 raise ValidationError("Order must be unique for product")
 
-    def __str__(self):
-        return self.product.name
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(ProductImage, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return str(self.sku)
+
+
+class ProductImage(models.Model):
+    name = models.CharField(max_length=100)
+    alternative_text = models.CharField(max_length=100)
+    url = models.ImageField(upload_to='product_images')
+
+    productline = models.ForeignKey(
+        ProductLine, on_delete=models.CASCADE, related_name="product_images")
+    order = OrderField(unique_for_field="productline", blank=True,)
+
+    def clean_fields(self, exclude=None):
+        qs = ProductImage.objects.filter(productline=self.productline)
+        for obj in qs:
+            if obj.id != self.id and obj.order == self.order:
+                raise ValidationError("Duplicate!")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(ProductImage, self).save(*args, **kwargs)
