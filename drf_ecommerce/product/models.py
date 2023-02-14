@@ -95,3 +95,6 @@ class ProductImage(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super(ProductImage, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
