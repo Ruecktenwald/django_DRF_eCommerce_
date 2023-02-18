@@ -9,4 +9,4 @@ db.sqlite3
 
 #editor config
 .vscode
-
+drf_ecommerce/product/migrations/*_initial.py

@@ -14,6 +14,9 @@ from .serializers import (
     CategorySerializer,
     BrandSerializer,
     ProductSerializer,
+    ProductLineSerializer,
+    ProductImageSerializer,
+
 )
 
 
@@ -49,7 +52,8 @@ class ProductViewSet(viewsets.ViewSet):
         Retrieve a product instance.
         """
         serializer = ProductSerializer(
-            self.queryset.filter(slug=slug).select_related("category", "brand"), many=True)
+            self.queryset.filter(slug=slug).select_related(
+                "category", "brand"), many=True)
         data = Response(serializer.data)
 
         q = list(connection.queries)
