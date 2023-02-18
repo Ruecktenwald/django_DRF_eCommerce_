@@ -8,6 +8,8 @@ from pygments import highlight
 from pygments.formatters import TerminalFormatter
 from pygments.lexers import SqlLexer
 from sqlparse import format
+from django.db.models import Prefetch
+
 
 from .models import Category, Brand, Product
 from .serializers import (
@@ -48,12 +50,14 @@ class ProductViewSet(viewsets.ViewSet):
     lookup_field = 'slug'
 
     def retrieve(self, request, slug=None,):
-        """
-        Retrieve a product instance.
-        """
+
         serializer = ProductSerializer(
-            self.queryset.filter(slug=slug).select_related(
-                "category", "brand"), many=True)
+            Product.objects.filter(slug=slug)
+            .select_related("category", "brand")
+            .prefetch_related(Prefetch("product_line__product_image")),
+            many=True
+        )
+
         data = Response(serializer.data)
 
         q = list(connection.queries)
